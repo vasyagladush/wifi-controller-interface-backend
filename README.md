@@ -35,7 +35,13 @@ touch database.sqlite
 cp .env.sample .env
 ```
 
-6. Start the application:
+6. Install pre-commit hooks:
+
+```console
+pre-commit install
+```
+
+7. Start the application:
 
 ```console
 invoke start

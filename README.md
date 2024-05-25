@@ -9,7 +9,7 @@
 1. Create a virtual environment:
 
 ```console
-$ python3 -m venv venv
+python3 -m venv venv
 ```
 
 2. Activate the created venv:
@@ -17,10 +17,10 @@ $ python3 -m venv venv
 - Linux/Mac command: `source venv/bin/activate`
 - Windows Command: `.\venv\Scripts\activate`
 
-3. Install dependencies:
+3. Install dependencies (inside the venv from now on):
 
 ```console
-(venv)$ pip install -r requirements.txt
+pip install -r requirements.txt
 ```
 
 4. Create a database.sqlite file (if using SQLite file)
@@ -55,9 +55,18 @@ invoke start
 from models.user import User
 ```
 
-- Generate a migration: `invoke migrationsGenerate --message=your_message_here`
-- Run migrations: `invoke migrationsRun`
-- Revert the last migration: `invoke migrationsRevert`
+- Generate a migration:
+```console
+invoke migrationsGenerate --message=your_message_here
+```
+- Run migrations:
+```console
+invoke migrationsRun
+```
+- Revert the last migration:
+```console
+invoke migrationsRevert
+```
 
 ## Sources
 

@@ -1,5 +1,5 @@
 repos:
 -   repo: https://github.com/hhatto/autopep8
-    rev: pre-commit autoupdate
+    rev: v2.1.1
     hooks:
     -   id: autopep8

@@ -1,22 +1,32 @@
-
 from uuid import UUID
+
 from sqlalchemy import select
 from sqlalchemy.ext.asyncio import AsyncSession
 
+from config import hash_helper
 from models.user import User
 from schemas.user import UserSignUpSchema
-from config import hash_helper
 
 
-async def get_user(db_session: AsyncSession, id: UUID | str) -> User | None:
-    return (await db_session.scalars(select(User).where(User.id == id))).first()
+async def get_user(db_session: AsyncSession, id: int) -> User | None:
+    return (
+        await db_session.scalars(select(User).where(User.id == id))
+    ).first()
 
 
-async def get_user_by_username(db_session: AsyncSession, username: str) -> User | None:
-    return (await db_session.scalars(select(User).where(User.username == username))).first()
+async def get_user_by_username(
+    db_session: AsyncSession, username: str
+) -> User | None:
+    return (
+        await db_session.scalars(select(User).where(User.username == username))
+    ).first()
 
 
-async def create_user(db_session: AsyncSession, user_data: UserSignUpSchema, commit_and_refresh: bool = True) -> User:
+async def create_user(
+    db_session: AsyncSession,
+    user_data: UserSignUpSchema,
+    commit_and_refresh: bool = True,
+) -> User:
     password_hash: str = hash_helper.encrypt(user_data.password)
 
     new_user = User()

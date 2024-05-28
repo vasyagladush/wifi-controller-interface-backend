@@ -25,8 +25,8 @@ def upgrade() -> None:
         "users",
         sa.Column("id", sa.Integer(), autoincrement=True, nullable=False),
         sa.Column("username", sa.String(), nullable=False),
-        sa.Column("firstname", sa.String(), nullable=False),
-        sa.Column("lastname", sa.String(), nullable=False),
+        sa.Column("first_name", sa.String(), nullable=False),
+        sa.Column("last_name", sa.String(), nullable=False),
         sa.Column("password_hash", sa.String(), nullable=False),
         sa.PrimaryKeyConstraint("id"),
     )

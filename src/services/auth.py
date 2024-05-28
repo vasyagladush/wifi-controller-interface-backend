@@ -1,6 +1,5 @@
 import time
 from typing import Annotated, Dict, TypedDict
-from uuid import UUID
 
 import jwt
 from fastapi import Depends, HTTPException, Request
@@ -12,7 +11,7 @@ from models.user import User
 
 class AuthJWTTokenPayload(TypedDict):
     user_id: int
-    expires: float
+    expires_at: float
 
 
 def construct_token_json_response(token: str):
@@ -26,24 +25,23 @@ def construct_auth_jwt(user: User) -> Dict[str, str]:
     # Set the expiry time.
     payload: AuthJWTTokenPayload = {
         "user_id": user.id,
-        "expires": time.time() + 2400,
+        "expires_at": time.time() + 2400,
     }
     return construct_token_json_response(
         jwt.encode(payload, secret_key, algorithm="HS256")  # type: ignore
     )
 
 
-def decode_jwt(token: str) -> dict | None:
-    decoded_token = jwt.decode(
+def decode_jwt(token: str) -> AuthJWTTokenPayload | None:
+    decoded_token: AuthJWTTokenPayload = jwt.decode(
         token.encode(), secret_key, algorithms=["HS256"]
     )
-    return decoded_token if decoded_token["expires"] >= time.time() else None
+    return (
+        decoded_token if decoded_token["expires_at"] >= time.time() else None
+    )
 
 
 class JWTBearer(HTTPBearer):
-    def __init__(self, auto_error: bool = True):
-        super(JWTBearer, self).__init__(auto_error=auto_error)
-
     async def __call__(self, request: Request) -> AuthJWTTokenPayload:  # type: ignore
         authorization: HTTPAuthorizationCredentials = await super(  # type: ignore
             JWTBearer, self

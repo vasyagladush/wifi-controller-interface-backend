@@ -1,40 +1,49 @@
-from pydantic import BaseModel
 from fastapi.security import HTTPBasicCredentials
+from pydantic import BaseModel, ConfigDict
+
+from schemas import BaseSchema
 
 
-class UserLoginCredentialsSchema(HTTPBasicCredentials):
-    class Config:
-        json_schema_extra = {
+class UserLoginCredentialsSchema(BaseSchema, HTTPBasicCredentials):
+    model_config = ConfigDict(
+        json_schema_extra={
             "example": {"username": "user.name", "password": "password"}
         }
+    )
 
 
-class UserSignUpSchema(HTTPBasicCredentials):
-    firstname: str
-    lastname: str
+class UserLoginResponseSchema(BaseSchema):
+    access_token: str
 
-    class Config:
-        json_schema_extra = {
+
+class UserSignUpSchema(BaseSchema, HTTPBasicCredentials):
+    first_name: str
+    last_name: str
+
+    model_config = ConfigDict(
+        json_schema_extra={
             "example": {
-                "firstname": "Name",
-                "lastname": "Surname",
+                "firstName": "Name",
+                "lastName": "Surname",
                 "username": "user.name",
-                "password": "password"
+                "password": "password",
             }
         }
+    )
 
 
-class UserSchema(BaseModel):
-    firstname: str
-    lastname: str
+class UserSchema(BaseSchema):
+    first_name: str
+    last_name: str
     username: str
 
-    class Config:
-        from_attributes = True
-        json_schema_extra = {
+    model_config = ConfigDict(
+        from_attributes=True,
+        json_schema_extra={
             "example": {
-                "firstname": "Name",
-                "lastname": "Surname",
+                "firstName": "Name",
+                "lastName": "Surname",
                 "username": "user.name",
             }
-        }
+        },
+    )

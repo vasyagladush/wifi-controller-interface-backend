@@ -32,8 +32,8 @@ async def create_user(
     new_user = User()
     new_user.username = user_data.username
     new_user.password_hash = password_hash
-    new_user.firstname = user_data.firstname
-    new_user.lastname = user_data.lastname
+    new_user.first_name = user_data.first_name
+    new_user.last_name = user_data.last_name
 
     db_session.add(new_user)
 

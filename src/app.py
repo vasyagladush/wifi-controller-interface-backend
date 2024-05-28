@@ -4,6 +4,7 @@ from contextlib import asynccontextmanager
 
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
+from fastapi_responses import custom_openapi
 
 from config import app_config, session_manager
 from routes.users import router as UsersRouter
@@ -26,8 +27,14 @@ async def lifespan(app: FastAPI):
         await session_manager.close()
 
 
-app = FastAPI(lifespan=lifespan, title="WiFi Controller")
+app = FastAPI(
+    lifespan=lifespan,
+    title="WiFi Controller",
+    docs_url=None if app_config.ENVIRONMENT == "production" else "/docs",
+)
+app.openapi = custom_openapi(app)
 
+# TODO: when we have production env set up, add FRONTEND_URL to .env and here if ENVIRONMENT == production then set allow_origin to the FRONTEND_URL
 app.add_middleware(
     CORSMiddleware,
     allow_origins=list("*"),

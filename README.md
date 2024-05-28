@@ -73,3 +73,4 @@ invoke migrationsRevert
 - https://fastapi.tiangolo.com/tutorial/sql-databases/
 - https://medium.com/@tclaitken/setting-up-a-fastapi-app-with-async-sqlalchemy-2-0-pydantic-v2-e6c540be4308#:~:text=Improvements%20to%20the%20async%20experience,over%20a%20synchronous%20database%20setup.
 - https://github.com/Youngestdev/fastapi-mongo
+- https://github.com/zhanymkanov/fastapi-best-practices?tab=readme-ov-file#4-chain-dependencies

@@ -11,7 +11,7 @@ class User(Base):
         primary_key=True, index=True, autoincrement=True
     )
     username: Mapped[str] = mapped_column(index=True, unique=True)
-    firstname: Mapped[str]
-    lastname: Mapped[str]
+    first_name: Mapped[str]
+    last_name: Mapped[str]
     password_hash: Mapped[str]
     # TODO: roles: admin, user, etc.

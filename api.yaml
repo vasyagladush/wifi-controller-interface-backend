@@ -1,0 +1,49 @@
+openapi: 3.0.3
+info:
+  title: wifi controller web API
+  version: "0.1"
+paths:
+  /users:
+    get:
+      responses:
+        '200':
+          description: "OK"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/User"
+    post:
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/User"
+      responses:
+        '204':
+          description: "OK"
+  /users/{id}:
+    get:
+      responses:
+          '200':
+            description: "OK"
+            content:
+              application/json:
+                schema:
+                  $ref: "#/components/schemas/User"
+  /users/{name}:
+    get:
+      responses:
+          '200':
+            description: "OK"
+            content:
+              application/json:
+                schema:
+                  $ref: "#/components/schemas/User"
+
+
+components:
+  schemas:
+    User:
+      type: object
+    APConfig:
+      type: object

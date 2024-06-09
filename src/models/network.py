@@ -4,6 +4,7 @@ from . import Base
 
 
 class Network(Base):
+    __tablename__: str = "network"
     id: Mapped[int] = mapped_column(primary_key=True)
     name: Mapped[str] = mapped_column(unique=True, nullable=False)
     ssid: Mapped[str] = mapped_column(nullable=True)

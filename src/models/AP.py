@@ -7,6 +7,7 @@ from . import Base
 
 
 class AP(Base):
+    __tablename__: str = "ap"
     id: Mapped[int] = mapped_column(primary_key=True)
     device_id: Mapped[int] = mapped_column(unique=True, nullable=False)
     name: Mapped[str] = mapped_column(unique=True)

@@ -1,11 +1,14 @@
-from ap_config import ConfigSchema
-from pydantic import ConfigDict
-
 from . import BaseSchema
+
+
+class NetworkNameSchema(BaseSchema):
+    name: str
 
 
 class APSchema(BaseSchema):
     device_id: int
     name: str
     ip: str
-    config: ConfigSchema
+    networks: list[
+        NetworkNameSchema
+    ]  # TODO: Verify that this how this should be done

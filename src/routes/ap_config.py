@@ -7,26 +7,29 @@ from services.AP import get_AP, get_AP_by_name
 
 router = APIRouter()
 
-# TODO: Implement post logic
+# TODO: Add auth to all 3 of these routes, once this is confirmed to mostly work
+# TODO: Implement PUT logic, only for id
 
 
 @router.get("/{id}", status_code=200, response_model=APSchema)
 async def get_config_id(id, db_session: DBSessionDep):
     try:
         id = int(id)
-        if id < 0 or id > 255:
-            raise HTTPException(status_code=400, detail="Invalid Device ID")
     except ValueError:
-        raise HTTPException(status_code=400, detail="Invalid Device ID")
-
+        raise HTTPException(status_code=400, detail="Invalid ID")
+    if id < 0:
+        raise HTTPException(status_code=400, detail="Invalid ID")
     ap = await get_AP(db_session, id)
     if ap is None:
-        raise HTTPException(status_code=400, detail="Invalid Device ID")
+        raise HTTPException(status_code=400, detail="Invalid ID")
     return ap
 
 
-# TODO: Implement router for config?name={name}
-async def get_config_name(name, db_session: DBSessionDep):
+# TODO: Verify this is ok
+@router.get("/", status_code=200, response_model=APSchema)
+async def get_config_name(name: str, db_session: DBSessionDep):
+    if name is None:
+        raise HTTPException(status_code=400, detail="Invalid Device Name")
     ap = await get_AP_by_name(db_session, name)
     if ap is None:
         raise HTTPException(status_code=400, detail="Invalid Device Name")

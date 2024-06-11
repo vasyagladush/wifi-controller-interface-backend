@@ -1,4 +1,4 @@
-from sqlalchemy import ForeignKey
+from sqlalchemy import ForeignKey, null
 from sqlalchemy.orm import Mapped, mapped_column, relationship
 
 from models.network import Network
@@ -11,6 +11,7 @@ class AccessPoint(Base):
     id: Mapped[int] = mapped_column(primary_key=True)
     device_id: Mapped[int] = mapped_column(unique=True, nullable=False)
     name: Mapped[str] = mapped_column(unique=True)
+    ip: Mapped[str] = mapped_column(nullable=False)
     networks: Mapped[list] = relationship(
         Network, secondary="ap_network_connectors"
     )

@@ -12,7 +12,7 @@ class AccessPoint(Base):
     device_id: Mapped[int] = mapped_column(unique=True, nullable=False)
     name: Mapped[str] = mapped_column(unique=True)
     networks: Mapped[list] = relationship(
-        Network, secondary="ap_network_connector"
+        Network, secondary="ap_network_connectors"
     )
 
 

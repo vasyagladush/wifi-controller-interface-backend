@@ -2,7 +2,7 @@ from typing import Sequence
 
 from sqlalchemy import select
 from sqlalchemy.ext.asyncio import AsyncSession
-from sqlalchemy.orm import joinedload
+from sqlalchemy.orm import selectinload
 
 from models.access_point import AccessPoint
 
@@ -11,7 +11,7 @@ async def get_APs(db_session: AsyncSession) -> Sequence[AccessPoint] | None:
     return (
         await db_session.scalars(
             select(AccessPoint)
-            .options(joinedload(AccessPoint.networks))
+            .options(selectinload(AccessPoint.networks))
             .order_by(AccessPoint.id)
         )
     ).all()
@@ -32,6 +32,7 @@ async def get_APs_by_name(
         await db_session.scalars(
             select(AccessPoint)
             .filter(AccessPoint.name.ilike(f"%{name}%"))
-            .options(joinedload(AccessPoint.networks))
+            .options(selectinload(AccessPoint.networks))
+            .order_by(AccessPoint.id)
         )
     ).all()

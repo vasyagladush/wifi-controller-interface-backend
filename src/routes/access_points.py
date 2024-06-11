@@ -1,3 +1,5 @@
+from typing import Sequence
+
 from fastapi import APIRouter, HTTPException, Query
 
 import services.access_point as AccessPointService
@@ -26,7 +28,7 @@ async def get_config_id(id, db_session: DBSessionDep):
     return ap
 
 
-@router.get("/", status_code=200, response_model=APSchema)
+@router.get("/", status_code=200, response_model=Sequence[APSchema])
 async def get_config_name(
     db_session: DBSessionDep, name: str = Query(None, min_length=3)
 ):

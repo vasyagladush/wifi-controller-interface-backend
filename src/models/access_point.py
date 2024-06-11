@@ -19,5 +19,5 @@ class AccessPoint(Base):
 class APNetworkConnector(Base):
     __tablename__: str = "ap_network_connectors"
     id: Mapped[int] = mapped_column(primary_key=True)
-    acess_point_id: Mapped[int] = mapped_column(ForeignKey(AccessPoint.id))
+    access_point_id: Mapped[int] = mapped_column(ForeignKey(AccessPoint.id))
     network_id: Mapped[int] = mapped_column(ForeignKey(Network.id))

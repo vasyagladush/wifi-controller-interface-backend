@@ -1,8 +1,8 @@
 """add_network_and_AP_tables
 
-Revision ID: 799be0602bfb
+Revision ID: 07bfc4405d71
 Revises: 71c3f5e5c075
-Create Date: 2024-06-11 15:15:32.307450
+Create Date: 2024-06-11 18:19:49.489641
 
 """
 
@@ -13,7 +13,7 @@ import sqlalchemy as sa
 from alembic import op
 
 # revision identifiers, used by Alembic.
-revision: str = "799be0602bfb"
+revision: str = "07bfc4405d71"
 down_revision: Union[str, None] = "71c3f5e5c075"
 branch_labels: Union[str, Sequence[str], None] = None
 depends_on: Union[str, Sequence[str], None] = None
@@ -42,10 +42,10 @@ def upgrade() -> None:
     op.create_table(
         "ap_network_connectors",
         sa.Column("id", sa.Integer(), nullable=False),
-        sa.Column("acess_point_id", sa.Integer(), nullable=False),
+        sa.Column("access_point_id", sa.Integer(), nullable=False),
         sa.Column("network_id", sa.Integer(), nullable=False),
         sa.ForeignKeyConstraint(
-            ["acess_point_id"],
+            ["access_point_id"],
             ["access_points.id"],
         ),
         sa.ForeignKeyConstraint(

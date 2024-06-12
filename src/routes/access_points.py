@@ -1,10 +1,12 @@
-from typing import Sequence
+from typing import Annotated, Optional, Sequence
 
-from fastapi import APIRouter, HTTPException, Query
+from fastapi import APIRouter, Depends, HTTPException, Query
 
 import services.access_point as AccessPointService
 from config import DBSessionDep
-from schemas.access_point import APSchema
+from routes import PaginationParamsDep
+from schemas.access_point import APSchema, GetAPsSchema
+from schemas.pagination import PaginationParamsSchema
 from services.auth import AuthJWTTokenValidatorDep
 
 router = APIRouter(
@@ -39,12 +41,16 @@ async def get_ap_config_by_id(id, db_session: DBSessionDep):
     return ap
 
 
-@router.get("/", status_code=200, response_model=Sequence[APSchema])
-async def get_ap_configs_by_name(
-    db_session: DBSessionDep, name: str = Query(None, min_length=3)
+@router.get("/", status_code=200, response_model=GetAPsSchema)
+async def get_ap_configs(
+    db_session: DBSessionDep,
+    pagination: Annotated[
+        PaginationParamsSchema, Depends(PaginationParamsDep)
+    ],
+    name: Optional[str] = Query(None, min_length=3),
 ):
-    """Returns a JSON list of all Access Points which have the given string as part of their name.
+    """Returns a paginated JSON result of all Access Points which have the given string as part of their name.
     Returned list can be an empty list."""
-    if name is None:
-        return await AccessPointService.get_APs(db_session)
-    return await AccessPointService.get_APs_by_name(db_session, name)
+    return await AccessPointService.get_paginated_APs(
+        db_session, pagination.page, pagination.limit, name
+    )

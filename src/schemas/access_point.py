@@ -1,6 +1,8 @@
+from typing import Sequence
+
 from pydantic import ConfigDict
 
-from . import BaseSchema
+from . import BaseSchema, PaginatedSchema
 
 
 class NetworkNameSchema(BaseSchema):
@@ -37,3 +39,7 @@ class APSchema(BaseSchema):
             }
         },
     )
+
+
+class GetAPsSchema(PaginatedSchema[APSchema]):
+    pass

@@ -54,10 +54,11 @@ async def get_paginated_APs(
     if name:
         query = query.filter(AccessPoint.name.ilike(f"%{name}%"))
 
+    query_before_pagination = query
     query = paginate_query(query, page, limit)
 
     access_points = (await db_session.scalars(query)).all()
-    count = await count_total_entities(db_session, AccessPoint)
+    count = await count_total_entities(db_session, query_before_pagination)
 
     total_pages = get_total_pages(limit, count)
     # TODO: count and total_pages and total_docs are not affected by the name filter. Need to fix this

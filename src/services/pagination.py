@@ -13,10 +13,12 @@ def paginate_query(query: Select[T], page: int, limit: int) -> Select[T]:
     )
 
 
-async def count_total_entities(db_session: AsyncSession, model: Any) -> int:
+async def count_total_entities(
+    db_session: AsyncSession, query: Select[Any]
+) -> int:
     return (
         await db_session.execute(
-            select(func.count()).select_from(select(model.id).subquery())
+            select(func.count()).select_from(query.alias())
         )
     ).scalar_one()
 

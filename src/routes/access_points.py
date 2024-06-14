@@ -5,7 +5,7 @@ from fastapi import APIRouter, Depends, HTTPException, Query
 import services.access_point as AccessPointService
 from config import DBSessionDep
 from routes import PaginationParamsDep
-from schemas.access_point import APSchema, GetAPsSchema
+from schemas.access_point import APSchema, GetAPsSchema, PutAPSchema
 from schemas.pagination import PaginationParamsSchema
 from services.auth import AuthJWTTokenValidatorDep
 
@@ -14,16 +14,24 @@ router = APIRouter(
 )
 
 
-# TODO: Implement PUT logic, only for id
-@router.put("/{id}", status_code=204)  # TODO: Response model? Input model?
-async def change_ap_config(id, db_session: DBSessionDep):
+# TODO: Add handling of networks changing
+@router.put("/{id}", status_code=204)
+async def change_ap_config(
+    id, config: PutAPSchema, db_session: DBSessionDep
+) -> None:
     """Endpoint for changing Access Point's configuration. The request must be accompanied with a JSON (formatted like the result of the GET request to this endpoint) that contains only the values to be changed.
 
     **WARNING**: Parameters [`id`, `deviceId`, `ip`] **CANNOT** be changed."""
-    raise HTTPException(
-        status_code=501, detail="Endpoint will be implemented very soon"
-    )
-    return "Not yet"
+    ap = await AccessPointService.get_AP(db_session, id)
+    if ap is None:
+        raise HTTPException(status_code=400, detail="Invalid ID")
+    update_data = dict(config)
+    print(update_data)
+    for entry in update_data.items():
+        if entry[1] != None and entry[0] != "networks":
+            setattr(ap, entry[0], entry[1])
+    await db_session.commit()
+    return
 
 
 @router.get("/{id}", status_code=200, response_model=APSchema)

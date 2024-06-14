@@ -1,4 +1,4 @@
-from typing import Sequence
+from typing import Optional
 
 from pydantic import ConfigDict
 
@@ -43,3 +43,12 @@ class APSchema(BaseSchema):
 
 class GetAPsSchema(PaginatedSchema[APSchema]):
     pass
+
+
+class NetworkSetSchema(BaseSchema):
+    id: int
+
+
+class PutAPSchema(BaseSchema):
+    name: Optional[str] = None
+    networks: Optional[list[NetworkSetSchema]] = None

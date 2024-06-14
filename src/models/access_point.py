@@ -23,6 +23,7 @@ class AccessPoint(Base):
         "Network",
         secondary="ap_network_connectors",
         back_populates="access_points",
+        lazy="joined",
     )
 
 

@@ -14,6 +14,7 @@ class Network(Base):
         "AccessPoint",
         secondary="ap_network_connectors",
         back_populates="networks",
+        lazy="joined",
     )
 
 

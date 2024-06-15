@@ -1,3 +1,4 @@
+from sqlite3 import IntegrityError
 from typing import Annotated, Optional, Sequence
 
 from fastapi import APIRouter, Depends, HTTPException, Query
@@ -26,18 +27,24 @@ async def change_ap_config(
     if ap is None:
         raise HTTPException(status_code=400, detail="Invalid ID")
     update_data = dict(config)
-    if "networks" in update_data.keys():
-        nets = update_data["networks"]
+    if update_data["networks"] is not None:
         ap.networks = []
-        for net in nets:
+        for net in update_data["networks"]:
             net_obj = await NetworkService.get_network(db_session, net.id)
             if net_obj is None:
+                await db_session.rollback()
                 raise HTTPException(status_code=400, detail="Invalid network")
             ap.networks.append(net_obj)
-        update_data.pop("networks")
-    for entry in update_data.items():
-        if entry[1] != None:
-            setattr(ap, entry[0], entry[1])
+    if update_data["name"] is not None:
+        if (
+            await AccessPointService.get_AP_by_exact_name(
+                db_session, update_data["name"]
+            )
+            is not None
+        ):
+            await db_session.rollback()
+            raise HTTPException(status_code=400, detail="Invalid name")
+        ap.name = update_data["name"]
     await db_session.commit()
     return
 

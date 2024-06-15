@@ -1,4 +1,4 @@
-from typing import Sequence, TypedDict
+from typing import Any, Sequence, TypedDict
 
 from sqlalchemy import select
 from sqlalchemy.ext.asyncio import AsyncSession
@@ -41,6 +41,19 @@ async def get_APs_by_name(
             .order_by(AccessPoint.id)
         )
     ).all()
+
+
+async def get_AP_by_exact_name(
+    db_session: AsyncSession, name: str
+) -> Sequence[AccessPoint] | None:
+    return (
+        await db_session.scalars(
+            select(AccessPoint)
+            .filter(AccessPoint.name == name)
+            .options(selectinload(AccessPoint.networks))
+            .order_by(AccessPoint.id)
+        )
+    ).first()
 
 
 async def get_paginated_APs(

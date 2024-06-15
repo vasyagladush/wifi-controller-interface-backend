@@ -25,8 +25,13 @@ pip install -r requirements.txt
 
 4. Create a database.sqlite file (if using SQLite file)
 
+Linux/Mac:
 ```console
 touch database.sqlite
+```
+Windows:
+```console
+type NUL > database.sqlite
 ```
 
 5. Create a .env file
@@ -47,6 +52,27 @@ pre-commit install
 invoke start
 ```
 
+## Next app starts
+
+### Traditional way:
+
+1. Activate venv
+
+- Linux/Mac command: `source venv/bin/activate`
+- Windows Command: `.\venv\Scripts\activate`
+
+2. Start the application:
+   
+```console
+invoke start
+```
+
+### Alternative way:
+Windows (requires PowerShell):
+```console
+.\run
+```
+Note regarding alternative Windows start: App may not close with the terminal - make sure to terminate the app (`CTRL` + `C`) before closing terminal.
 ## Migrations
 
 - add new models' imports to the end of the [models module file](./src/models/__init__.py) so that Alembic detects that new tables have to be created, like:

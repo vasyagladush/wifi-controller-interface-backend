@@ -1,3 +1,5 @@
+from typing import Annotated
+
 from fastapi import APIRouter, Body, HTTPException
 
 import services.user as UserService
@@ -9,7 +11,11 @@ from schemas.user import (
     UserSchema,
     UserSignUpSchema,
 )
-from services.auth import AuthJWTTokenValidatorDep, construct_auth_jwt
+from services.auth import (
+    AuthJWTTokenPayload,
+    AuthJWTTokenValidatorDep,
+    construct_auth_jwt,
+)
 
 router = APIRouter()
 
@@ -60,7 +66,7 @@ async def signup(db_session: DBSessionDep, body: UserSignUpSchema = Body(...)):
     "/", status_code=200, response_model=UserSchema, responses={401: {}}
 )
 async def get(
-    auth_token_body: AuthJWTTokenValidatorDep,
+    auth_token_body: Annotated[AuthJWTTokenPayload, AuthJWTTokenValidatorDep],
     db_session: DBSessionDep,
 ):
     user: User | None = await UserService.get_user(

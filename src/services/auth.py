@@ -69,4 +69,4 @@ class JWTBearer(HTTPBearer):
             )
 
 
-AuthJWTTokenValidatorDep = Annotated[AuthJWTTokenPayload, Depends(JWTBearer())]
+AuthJWTTokenValidatorDep = Depends(JWTBearer())

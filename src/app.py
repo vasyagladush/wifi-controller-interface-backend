@@ -7,6 +7,7 @@ from fastapi.middleware.cors import CORSMiddleware
 from fastapi_responses import custom_openapi
 
 from config import app_config, session_manager
+from routes.access_points import router as AccessPointsRouter
 from routes.console import router as ConsoleRouter
 from routes.users import router as UsersRouter
 
@@ -51,4 +52,7 @@ async def read_root():
 
 
 app.include_router(UsersRouter, tags=["Users"], prefix="/users")
+app.include_router(
+    AccessPointsRouter, tags=["Access points"], prefix="/access-points"
+)
 app.include_router(ConsoleRouter, tags=["Console"], prefix="/console")

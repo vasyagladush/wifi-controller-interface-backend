@@ -10,3 +10,4 @@ alembic==1.13.1
 aiosqlite==0.20.0
 pre-commit
 fastapi-responses==0.2.1
+aiofiles==23.2.1

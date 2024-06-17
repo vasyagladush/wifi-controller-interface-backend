@@ -19,6 +19,8 @@ class AppConfig(BaseSettings):
     JWT_SECRET_KEY: Optional[str] = None
     DEBUG_LOGS: bool = False
     ECHO_SQL: bool = False
+    CMD_PIPE_PATH: str = ""
+    OUTPUT_PIPE_PATH: str = ""
 
     class Config:
         env_file = ".env"

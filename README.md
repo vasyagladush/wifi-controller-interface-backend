@@ -84,14 +84,21 @@ from models.user import User
 - Generate a migration:
 ```console
 invoke migrationsGenerate --message=your_message_here
+// or, if it throws an error on your machine (Windows especially),
+// try using the direct alembic command:
+alembic revision --autogenerate -m "your_message_here"
 ```
 - Run migrations:
 ```console
 invoke migrationsRun
+// or
+alembic upgrade head
 ```
 - Revert the last migration:
 ```console
 invoke migrationsRevert
+// or
+alembic downgrade -1
 ```
 
 ## Sources

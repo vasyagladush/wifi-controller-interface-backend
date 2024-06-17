@@ -12,7 +12,7 @@ router = APIRouter(
 
 @router.post("/", status_code=200)
 async def cmd_input(command: CmdSchema = Body(...)):
-    output = send_command(
+    output = await send_command(
         app_config.CMD_PIPE_PATH,
         app_config.OUTPUT_PIPE_PATH,
         command.cmd,

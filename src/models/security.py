@@ -41,7 +41,6 @@ class Security(Base):
     )
     radius: Mapped[str] = mapped_column(nullable=True)
     eap: Mapped[bool] = mapped_column(default=False)
-    radius: Mapped[str] = mapped_column(nullable=True)
     mac_acl_type: Mapped[ACLType] = mapped_column(
         Enum(ACLType), default=ACLType.OFF
     )

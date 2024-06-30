@@ -36,6 +36,7 @@ class SecurityMACACLConnector(Base):
 class Security(Base):
     __tablename__ = "security"
     id: Mapped[int] = mapped_column(primary_key=True)
+    name: Mapped[str] = mapped_column(unique=True)
     wireless_security_type: Mapped[WirelessSecurityType] = mapped_column(
         Enum(WirelessSecurityType), default=WirelessSecurityType.NO_PROTECTION
     )

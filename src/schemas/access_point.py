@@ -2,7 +2,7 @@ from typing import Optional
 
 from pydantic import ConfigDict
 
-from schemas.joint import NetworkIdSchema
+from schemas.joint import GenericIdentSchema
 
 from . import BaseSchema, PaginatedSchema
 
@@ -12,7 +12,7 @@ class APSchema(BaseSchema):
     device_id: int
     name: str
     ip: str
-    networks: list[NetworkIdSchema]
+    networks: list[GenericIdentSchema]
 
     model_config = ConfigDict(
         from_attributes=True,

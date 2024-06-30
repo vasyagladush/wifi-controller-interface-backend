@@ -6,6 +6,7 @@ from . import Base
 class Wireless(Base):
     __tablename__ = "wireless"
     id: Mapped[int] = mapped_column(primary_key=True)
+    name: Mapped[str] = mapped_column(unique=True)
     vht: Mapped[bool] = mapped_column(default=False)
     acs: Mapped[bool] = mapped_column(default=False)
     beacon_interval: Mapped[int] = mapped_column(nullable=False)

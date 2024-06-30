@@ -1,6 +1,6 @@
 from pydantic import ConfigDict
 
-from schemas.joint import APIdSchema, SecurityIdSchema, WirelessIdSchema
+from schemas.joint import APIdSchema, GenericIdentSchema
 
 from . import BaseSchema
 
@@ -11,8 +11,8 @@ class NetworkSchema(BaseSchema):
     ssid: str
     country_code: str
     access_points: list[APIdSchema]
-    wireless: list[WirelessIdSchema]
-    security: list[SecurityIdSchema]
+    wireless: list[GenericIdentSchema]
+    security: list[GenericIdentSchema]
 
     model_config = ConfigDict(
         from_attributes=True,
@@ -27,10 +27,10 @@ class NetworkSchema(BaseSchema):
                     {"id": 3, "deviceId": 34, "name": "Floor 2 AP"},
                 ],
                 "wireless": [
-                    {"id": 6},
+                    {"id": 6, "name": "Wireless 1"},
                 ],
                 "security": [
-                    {"id": 8},
+                    {"id": 8, "name": "Default"},
                 ],
             }
         },

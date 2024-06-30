@@ -10,7 +10,7 @@ class MACACL(Base):
     id: Mapped[int] = mapped_column(primary_key=True)
     macs: Mapped[list[str]] = mapped_column(MutableList.as_mutable(PickleType), nullable=False, default=[])  # type: ignore
     # TODO: Verify macs work as intended
-    mac_acls: Mapped[list["Security"]] = relationship(
+    security: Mapped[list["Security"]] = relationship(
         "Security",
         secondary="security_mac_acl_connectors",
         back_populates="mac_acls",

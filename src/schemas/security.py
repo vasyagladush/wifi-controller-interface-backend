@@ -8,7 +8,7 @@ from . import BaseSchema
 class SecuritySchema(BaseSchema):
     id: int
     wireless_security_type: int  # TODO: Verify correctness of this
-    radius: str
+    radius: str | None
     eap: bool
     mac_acl_type: int  # TODO: Verify correctness of this
     mac_acls: list[MacListSchema]

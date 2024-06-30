@@ -24,6 +24,9 @@ class Network(Base):
     name: Mapped[str] = mapped_column(unique=True, nullable=False)
     ssid: Mapped[str] = mapped_column(nullable=True)
     country_code: Mapped[str] = mapped_column(String(2), nullable=False)
+    password: Mapped[str] = mapped_column(
+        String, nullable=True
+    )  # ENCRYPTED, not plain text !!!
     access_points: Mapped[list["AccessPoint"]] = relationship(
         "AccessPoint",
         secondary="ap_network_connectors",
@@ -42,7 +45,6 @@ class Network(Base):
         back_populates="networks",
         lazy="selectin",
     )
-    # TODO: Add password connection / field?
 
 
 from models.access_point import AccessPoint

@@ -25,6 +25,25 @@ async def change_mac_acl_config(
         raise HTTPException(status_code=400, detail="Invalid ID")
     update_data = dict(config)
 
+    if update_data["name"] is not None:
+        if (
+            await MacAclService.get_mac_acl_by_exact_name(
+                db_session, update_data["name"]
+            )
+            is not None
+        ):
+            await db_session.rollback()
+            raise HTTPException(status_code=400, detail="Invalid MAC address")
+
+    if update_data["macs"] is not None:
+        for mac in update_data["macs"]:
+            if len(mac) != 17:
+                await db_session.rollback()
+                raise HTTPException(
+                    status_code=400, detail="Invalid MAC address"
+                )
+        mac_acl.macs = update_data["macs"]
+
     await HandlerService.update_item_list(
         mac_acl.security,
         update_data["security"],
@@ -32,6 +51,9 @@ async def change_mac_acl_config(
         "Invalid security profile",
         db_session,
     )
+
+    await db_session.commit()
+    return
 
 
 @router.get("/{id}", status_code=200, response_model=MacAclSchema)

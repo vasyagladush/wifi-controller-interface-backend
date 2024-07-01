@@ -9,21 +9,21 @@ from . import Base
 # TODO: Verify this works with sqlite
 
 
-class WirelessSecurityType(enum.Enum):
-    NO_PROTECTION = 0
-    WEP = 1
-    WPA_PSK = 2
-    WPA_ENTERPRISE = 3
-    WPA2_PSK = 4
-    WPA2_ENTERPRISE = 5
-    WPA3_PSK = 6
-    WPA3_ENTERPRISE = 7
+# WirelessSecurityType:
+# NO_PROTECTION = 0
+# WEP = 1
+# WPA_PSK = 2
+# WPA_ENTERPRISE = 3
+# WPA2_PSK = 4
+# WPA2_ENTERPRISE = 5
+# WPA3_PSK = 6
+# WPA3_ENTERPRISE = 7
 
 
-class ACLType(enum.Enum):
-    OFF = 0
-    DENY = 1
-    PERMIT = 2
+# ACLType:
+# OFF = 0
+# DENY = 1
+# PERMIT = 2
 
 
 class SecurityMACACLConnector(Base):
@@ -37,14 +37,10 @@ class Security(Base):
     __tablename__ = "security"
     id: Mapped[int] = mapped_column(primary_key=True)
     name: Mapped[str] = mapped_column(unique=True)
-    wireless_security_type: Mapped[WirelessSecurityType] = mapped_column(
-        Enum(WirelessSecurityType), default=WirelessSecurityType.NO_PROTECTION
-    )
+    wireless_security_type: Mapped[int] = mapped_column(default=0)
     radius: Mapped[str] = mapped_column(nullable=True)
     eap: Mapped[bool] = mapped_column(default=False)
-    mac_acl_type: Mapped[ACLType] = mapped_column(
-        Enum(ACLType), default=ACLType.OFF
-    )
+    mac_acl_type: Mapped[int] = mapped_column(default=0)
     mac_acls: Mapped[list["MACACL"]] = relationship(
         "MACACL",
         secondary="security_mac_acl_connectors",

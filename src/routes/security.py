@@ -1,3 +1,4 @@
+import sqlalchemy
 from fastapi import APIRouter, Depends, HTTPException, Query
 
 import services.mac_acl as MACACLService
@@ -12,8 +13,6 @@ router = APIRouter(
     dependencies=[AuthJWTTokenValidatorDep], responses={401: {}}
 )
 
-# TODO: Finish PUT
-
 
 @router.put("/{id}", status_code=200)
 async def change_security_config(
@@ -27,6 +26,51 @@ async def change_security_config(
     if security is None:
         raise HTTPException(status_code=400, detail="Invalid ID")
     update_data = dict(config)
+
+    if update_data["name"] is not None:
+        if (
+            await SecurityService.get_security_by_exact_name(
+                db_session, update_data["name"]
+            )
+            is not None
+        ):
+            await db_session.rollback()
+            raise HTTPException(status_code=400, detail="Invalid name")
+        security.name = update_data["name"]
+
+    if update_data["wireless_security_type"] is not None:
+        if update_data["wireless_security_type"] not in {
+            0,
+            1,
+            2,
+            3,
+            4,
+            5,
+            6,
+            7,
+        }:
+            await db_session.rollback()
+            raise HTTPException(
+                status_code=400, detail="Invalid wireless security type"
+            )
+        security.wireless_security_type = update_data["wireless_security_type"]
+
+    if update_data["radius"] is not None:
+        if update_data["radius"] == "":
+            security.radius = sqlalchemy.sql.null()  # type: ignore
+        else:
+            security.radius = update_data["radius"]
+
+    if update_data["eap"] is not None:
+        security.eap = update_data["eap"]
+
+    if update_data["mac_acl_type"] is not None:
+        if update_data["mac_acl_type"] not in {0, 1, 2}:
+            await db_session.rollback()
+            raise HTTPException(
+                status_code=400, detail="Invalid wireless security type"
+            )
+        security.mac_acl_type = update_data["mac_acl_type"]
 
     await HandlerService.update_item_list(
         security.networks,
@@ -43,6 +87,9 @@ async def change_security_config(
         "Invalid MAC ACL",
         db_session,
     )
+
+    await db_session.commit()
+    return
 
 
 @router.get("/{id}", status_code=200, response_model=SecuritySchema)

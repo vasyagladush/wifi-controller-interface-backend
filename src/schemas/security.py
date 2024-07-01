@@ -10,12 +10,10 @@ from . import BaseSchema
 class SecuritySchema(BaseSchema):
     id: int
     name: str
-    wireless_security_type: (
-        int  # TODO: Verify correctness of this, remember put schema
-    )
+    wireless_security_type: int
     radius: str | None
     eap: bool
-    mac_acl_type: int  # TODO: Verify correctness of this, remember put schema
+    mac_acl_type: int
     mac_acls: list[MacListSchema]
     networks: list[GenericIdentSchema]
 
@@ -25,10 +23,10 @@ class SecuritySchema(BaseSchema):
             "example": {
                 "id": 2,
                 "name": "Default",
-                "wireless_security_type": 4,  # TODO: Verify correctness of this
+                "wireless_security_type": 4,
                 "radius": "192.168.1.1",
                 "eap": False,
-                "mac_acl_type": 1,  # TODO: Verify correctness of this
+                "mac_acl_type": 1,
                 "mac_acls": [
                     {
                         "id": 2,

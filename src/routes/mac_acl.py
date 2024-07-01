@@ -1,3 +1,5 @@
+import re
+
 from fastapi import APIRouter, Depends, HTTPException, Query
 
 import services.mac_acl as MacAclService
@@ -10,6 +12,11 @@ from services.auth import AuthJWTTokenValidatorDep
 router = APIRouter(
     dependencies=[AuthJWTTokenValidatorDep], responses={401: {}}
 )
+
+
+async def mac_invalid(mac: str) -> bool:
+    mac_pattern = re.compile(r"^([0-9A-Fa-f]{2}:){5}([0-9A-Fa-f]{2})$")
+    return not bool(mac_pattern.match(mac))
 
 
 @router.put("/{id}", status_code=200)
@@ -33,11 +40,12 @@ async def change_mac_acl_config(
             is not None
         ):
             await db_session.rollback()
-            raise HTTPException(status_code=400, detail="Invalid MAC address")
+            raise HTTPException(status_code=400, detail="Invalid name")
+        mac_acl.name = update_data["name"]
 
     if update_data["macs"] is not None:
         for mac in update_data["macs"]:
-            if len(mac) != 17:
+            if await mac_invalid(mac):
                 await db_session.rollback()
                 raise HTTPException(
                     status_code=400, detail="Invalid MAC address"

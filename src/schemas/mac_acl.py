@@ -1,6 +1,8 @@
+from typing import Optional
+
 from pydantic import ConfigDict
 
-from schemas.joint import GenericIdentSchema
+from schemas.joint import GenericIdentSchema, GenericIdSchema
 
 from . import BaseSchema
 
@@ -23,3 +25,9 @@ class MacAclSchema(BaseSchema):
             ],
         },
     )
+
+
+class PutMacAclSchema(BaseSchema):
+    name: Optional[str] = None
+    macs: Optional[list[str]] = None
+    security: Optional[list[GenericIdSchema]] = None

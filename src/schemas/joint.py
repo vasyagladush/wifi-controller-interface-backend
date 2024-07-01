@@ -13,6 +13,15 @@ class GenericIdentSchema(BaseSchema):
     )
 
 
+class GenericIdSchema(BaseSchema):
+    id: int
+
+    model_config = ConfigDict(
+        from_attributes=True,
+        json_schema_extra={"example": {"id": 1}},
+    )
+
+
 class APIdSchema(BaseSchema):
     id: int
     name: str

@@ -1,6 +1,8 @@
+from typing import Optional
+
 from pydantic import ConfigDict
 
-from schemas.joint import GenericIdentSchema
+from schemas.joint import GenericIdentSchema, GenericIdSchema
 
 from . import BaseSchema
 
@@ -30,3 +32,12 @@ class WirelessSchema(BaseSchema):
             }
         },
     )
+
+
+class PutWirelessSchema(BaseSchema):
+    name: Optional[str] = None
+    vht: Optional[bool] = None
+    acs: Optional[bool] = None
+    beacon_interval: Optional[int] = None
+    rts_cts_threshold: Optional[int] = None
+    networks: Optional[list[GenericIdSchema]] = None

@@ -1,6 +1,8 @@
+from typing import Optional
+
 from pydantic import ConfigDict
 
-from schemas.joint import GenericIdentSchema, MacListSchema
+from schemas.joint import GenericIdentSchema, GenericIdSchema, MacListSchema
 
 from . import BaseSchema
 
@@ -8,10 +10,12 @@ from . import BaseSchema
 class SecuritySchema(BaseSchema):
     id: int
     name: str
-    wireless_security_type: int  # TODO: Verify correctness of this
+    wireless_security_type: (
+        int  # TODO: Verify correctness of this, remember put schema
+    )
     radius: str | None
     eap: bool
-    mac_acl_type: int  # TODO: Verify correctness of this
+    mac_acl_type: int  # TODO: Verify correctness of this, remember put schema
     mac_acls: list[MacListSchema]
     networks: list[GenericIdentSchema]
 
@@ -39,3 +43,13 @@ class SecuritySchema(BaseSchema):
             }
         },
     )
+
+
+class PutSecuritySchema(BaseSchema):
+    name: Optional[str] = None
+    wireless_security_type: Optional[int] = None
+    radius: Optional[str] = None
+    eap: Optional[bool] = None
+    mac_acl_type: Optional[int] = None
+    mac_acls: Optional[list[GenericIdSchema]] = None
+    networks: Optional[list[GenericIdSchema]] = None

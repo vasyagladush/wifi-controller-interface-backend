@@ -1,6 +1,8 @@
+from typing import Optional
+
 from pydantic import ConfigDict
 
-from schemas.joint import APIdSchema, GenericIdentSchema
+from schemas.joint import APIdSchema, GenericIdentSchema, GenericIdSchema
 
 from . import BaseSchema
 
@@ -35,3 +37,12 @@ class NetworkSchema(BaseSchema):
             }
         },
     )
+
+
+class PutNetworkSchema(BaseSchema):
+    name: Optional[str] = None
+    ssid: Optional[str] = None
+    country_code: Optional[str] = None
+    access_points: Optional[list[GenericIdSchema]] = None
+    wireless: Optional[list[GenericIdSchema]] = None
+    security: Optional[list[GenericIdSchema]] = None

@@ -1,3 +1,5 @@
+from typing import Sequence
+
 from fastapi import APIRouter, Depends, HTTPException, Query
 
 import services.access_point as AccessPointService
@@ -6,7 +8,7 @@ import services.security as SecurityService
 import services.update_object as HandlerService
 import services.wireless as WirelessService
 from config import DBSessionDep
-from schemas.network import NetworkSchema, PutNetworkSchema
+from schemas.network import NetworkListSchema, PutNetworkSchema
 from services.auth import AuthJWTTokenValidatorDep
 
 router = APIRouter(
@@ -70,16 +72,22 @@ async def change_network_config(
     #         network.access_points.append(wireless_obj)
 
 
-@router.get("/{id}", status_code=200, response_model=NetworkSchema)
-async def get_network_config_by_id(id, db_session: DBSessionDep):
-    """Returns JSON containg current configuration of the Network with given database id."""
-    try:
-        id = int(id)
-    except ValueError:
-        raise HTTPException(status_code=400, detail="Invalid ID")
-    if id < 0:
-        raise HTTPException(status_code=400, detail="Invalid ID")
-    network = await NetworkService.get_network(db_session, id)
-    if network is None:
-        raise HTTPException(status_code=400, detail="Invalid ID")
-    return network
+# @router.get("/{id}", status_code=200, response_model=NetworkSchema)
+# async def get_network_config_by_id(id, db_session: DBSessionDep):
+#    """Returns JSON containg current configuration of the Network with given database id."""
+#    try:
+#        id = int(id)
+#    except ValueError:
+#        raise HTTPException(status_code=400, detail="Invalid ID")
+#    if id < 0:
+#        raise HTTPException(status_code=400, detail="Invalid ID")
+#    network = await NetworkService.get_network(db_session, id)
+#    if network is None:
+#        raise HTTPException(status_code=400, detail="Invalid ID")
+#    return network
+
+
+@router.get("/", status_code=200, response_model=NetworkListSchema)
+async def get_network_configs(db_session: DBSessionDep):
+    """Returns JSON containg current (reduced) configurations of all Networks"""
+    return await NetworkService.get_networks(db_session)

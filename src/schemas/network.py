@@ -50,3 +50,45 @@ class PutNetworkSchema(BaseSchema):
     access_points: Optional[list[GenericIdSchema]] = None
     wireless: Optional[list[GenericIdSchema]] = None
     security: Optional[list[GenericIdSchema]] = None
+
+
+class NG_AP_Schema(BaseSchema):
+    id: int
+    device_id: int
+    name: str
+    ip: str
+
+
+class NG_Wireless_Schema(BaseSchema):
+    id: int
+    name: str
+    vht: bool
+    acs: bool
+    beacon_interval: int
+    rts_cts_threshold: int
+
+
+class NG_MAC_ACL_Schema(BaseSchema):
+    id: int
+    name: str
+    macs: list[str]
+
+
+class NG_Security_Schema(BaseSchema):
+    id: int
+    name: str
+    wireless_security_type: int
+    radius: str | None
+    eap: bool
+    mac_acl_type: int
+    mac_acls: list[NG_MAC_ACL_Schema]
+
+
+class NetworkGigaSchema(BaseSchema):
+    id: int
+    name: str
+    ssid: str
+    country_code: str
+    access_points: list[NG_AP_Schema]
+    wireless: list[NG_Wireless_Schema]
+    security: list[NG_Security_Schema]

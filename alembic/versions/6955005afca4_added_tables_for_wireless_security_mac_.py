@@ -24,12 +24,14 @@ def upgrade() -> None:
     op.create_table(
         "mac_acls",
         sa.Column("id", sa.Integer(), nullable=False),
+        sa.Column("name", sa.String(), unique=True, nullable=False),
         sa.Column("macs", sa.PickleType(), nullable=False),
         sa.PrimaryKeyConstraint("id"),
     )
     op.create_table(
         "security",
         sa.Column("id", sa.Integer(), nullable=False),
+        sa.Column("name", sa.String(), unique=True, nullable=False),
         sa.Column(
             "wireless_security_type",
             sa.Enum(
@@ -57,6 +59,7 @@ def upgrade() -> None:
     op.create_table(
         "wireless",
         sa.Column("id", sa.Integer(), nullable=False),
+        sa.Column("name", sa.String(), unique=True, nullable=False),
         sa.Column("vht", sa.Boolean(), nullable=False),
         sa.Column("acs", sa.Boolean(), nullable=False),
         sa.Column("beacon_interval", sa.Integer(), nullable=False),

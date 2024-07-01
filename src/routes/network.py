@@ -87,7 +87,9 @@ async def change_network_config(
 #    return network
 
 
-@router.get("/", status_code=200, response_model=NetworkListSchema)
-async def get_network_configs(db_session: DBSessionDep):
-    """Returns JSON containg current (reduced) configurations of all Networks"""
-    return await NetworkService.get_networks(db_session)
+# @router.get("/", status_code=200, response_model=NetworkListSchema)
+# async def get_network_configs(db_session: DBSessionDep):
+#    """Returns JSON containg current (reduced) configurations of all Networks"""
+#    networks = await NetworkService.get_networks(db_session)
+#    response = NetworkListSchema(networks=networks) # type:ignore
+#    return response

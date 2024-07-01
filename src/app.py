@@ -15,6 +15,8 @@ from routes.security import router as SecurityRouter
 from routes.users import router as UsersRouter
 from routes.wireless import router as WirelessRouter
 
+# from routes.debug import router as DebugRouter
+
 logging.basicConfig(
     stream=sys.stdout,
     level=logging.DEBUG if app_config.DEBUG_LOGS else logging.INFO,
@@ -64,3 +66,4 @@ app.include_router(NetworksRouter, tags=["Networks"], prefix="/networks")
 app.include_router(WirelessRouter, tags=["Wireless"], prefix="/wireless")
 app.include_router(SecurityRouter, tags=["Security"], prefix="/security")
 app.include_router(MacACLRouter, tags=["MAC ACL"], prefix="/mac-acls")
+# app.include_router(DebugRouter, tags=["Debug"], prefix="/debug")

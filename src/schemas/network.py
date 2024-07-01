@@ -40,7 +40,7 @@ class NetworkSimpleSchema(BaseSchema):
 
 
 class NetworkListSchema(BaseSchema):
-    networks: Sequence[NetworkSimpleSchema]
+    networks: Sequence[NetworkSimpleSchema | None]
 
 
 class PutNetworkSchema(BaseSchema):

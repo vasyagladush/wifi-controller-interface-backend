@@ -15,8 +15,6 @@ router = APIRouter(
     dependencies=[AuthJWTTokenValidatorDep], responses={401: {}}
 )
 
-# TODO: Finish PUT
-
 
 @router.put("/{id}", status_code=200)
 async def change_network_config(
@@ -30,6 +28,29 @@ async def change_network_config(
     if network is None:
         raise HTTPException(status_code=400, detail="Invalid ID")
     update_data = dict(config)
+
+    if update_data["name"] is not None:
+        if (
+            await NetworkService.get_network_by_exact_name(
+                db_session, update_data["name"]
+            )
+            is not None
+        ):
+            await db_session.rollback()
+            raise HTTPException(status_code=400, detail="Invalid name")
+        network.name = update_data["name"]
+
+    if update_data["ssid"] is not None:
+        if update_data["ssid"] == "":
+            network.ssid = sqlalchemy.sql.null()  # type: ignore
+        else:
+            network.ssid = update_data["ssid"]
+
+    if update_data["country_code"] is not None:
+        if len(update_data["country_code"]) != 2:
+            await db_session.rollback()
+            raise HTTPException(status_code=400, detail="Invalid country code")
+        network.country_code = update_data["country_code"]
 
     await HandlerService.update_item_list(
         network.access_point,
@@ -52,24 +73,6 @@ async def change_network_config(
         "Invalid security profile",
         db_session,
     )
-
-    # if update_data["access_points"] is not None:
-    #     network.access_points = []
-    #     for ap in update_data["access_points"]:
-    #         ap_obj = await AccessPointService.get_AP(db_session, ap.id)
-    #         if ap_obj is None:
-    #             await db_session.rollback()
-    #             raise HTTPException(status_code=400, detail="Invalid Access Point")
-    #         network.access_points.append(ap_obj)
-
-    # if update_data["wireless"] is not None:
-    #     network.wireless = []
-    #     for wireless in update_data["wireless"]:
-    #         wireless_obj = await WirelessService.get_wireless(db_session, wireless.id)
-    #         if wireless_obj is None:
-    #             await db_session.rollback()
-    #             raise HTTPException(status_code=400, detail="Invalid wireless")
-    #         network.access_points.append(wireless_obj)
 
 
 # @router.get("/{id}", status_code=200, response_model=NetworkSchema)

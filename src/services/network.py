@@ -25,3 +25,20 @@ async def get_networks(db_session: AsyncSession) -> Sequence[Network] | None:
             .order_by(Network.id)
         )
     ).all()
+
+
+async def get_network_by_exact_name(
+    db_session: AsyncSession, name: str
+) -> Sequence[Network] | None:
+    return (
+        await db_session.scalars(
+            select(Network)
+            .filter(Network.name == name)
+            .options(
+                selectinload(Network.access_points),
+                selectinload(Network.wireless),
+                selectinload(Network.security),
+            )
+            .order_by(Network.id)
+        )
+    ).first()

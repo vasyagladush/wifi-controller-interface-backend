@@ -24,8 +24,8 @@ router = APIRouter(
 async def create_network_config(
     db_session: DBSessionDep, config: NetworkGigaSchema = Body(...)
 ):
-    wireless = await [
-        WirelessService.create_wireless(
+    wireless = [
+        await WirelessService.create_wireless(
             db_session,
             w.name,
             w.vht,
@@ -35,8 +35,8 @@ async def create_network_config(
         )
         for w in config.wireless
     ]
-    security = await [
-        SecurityService.create_security(
+    security = [
+        await SecurityService.create_security(
             db_session,
             s.name,
             s.wireless_security_type,

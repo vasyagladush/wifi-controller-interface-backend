@@ -87,3 +87,20 @@ async def get_wireless_config_by_id(id, db_session: DBSessionDep):
     if wireless is None:
         raise HTTPException(status_code=400, detail="Invalid ID")
     return wireless
+
+
+@router.delete("/{id}", status_code=200)
+async def delete_wireless(id, db_session: DBSessionDep):
+    """Deletes Wireless profile with given database id."""
+    try:
+        id = int(id)
+    except ValueError:
+        raise HTTPException(status_code=400, detail="Invalid ID")
+    if id < 0:
+        raise HTTPException(status_code=400, detail="Invalid ID")
+    wireless = await WirelessService.get_wireless(db_session, id)
+    if wireless is None:
+        raise HTTPException(status_code=400, detail="Invalid ID")
+    await db_session.delete(wireless)
+    await db_session.commit()
+    return

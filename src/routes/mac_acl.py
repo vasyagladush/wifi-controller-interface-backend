@@ -77,3 +77,20 @@ async def get_mac_acl_config_by_id(id, db_session: DBSessionDep):
     if mac_acl is None:
         raise HTTPException(status_code=400, detail="Invalid ID")
     return mac_acl
+
+
+@router.delete("/{id}", status_code=200)
+async def delete_mac_acl(id, db_session: DBSessionDep):
+    """Deletes MAC ACL with given database id."""
+    try:
+        id = int(id)
+    except ValueError:
+        raise HTTPException(status_code=400, detail="Invalid ID")
+    if id < 0:
+        raise HTTPException(status_code=400, detail="Invalid ID")
+    mac_acl = await MacAclService.get_mac_acl(db_session, id)
+    if mac_acl is None:
+        raise HTTPException(status_code=400, detail="Invalid ID")
+    await db_session.delete(mac_acl)
+    await db_session.commit()
+    return

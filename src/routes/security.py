@@ -105,3 +105,20 @@ async def get_security_config_by_id(id, db_session: DBSessionDep):
     if security is None:
         raise HTTPException(status_code=400, detail="Invalid ID")
     return security
+
+
+@router.delete("/{id}", status_code=200)
+async def delete_security(id, db_session: DBSessionDep):
+    """Deletes Security profile with given database id."""
+    try:
+        id = int(id)
+    except ValueError:
+        raise HTTPException(status_code=400, detail="Invalid ID")
+    if id < 0:
+        raise HTTPException(status_code=400, detail="Invalid ID")
+    security = await SecurityService.get_security(db_session, id)
+    if security is None:
+        raise HTTPException(status_code=400, detail="Invalid ID")
+    await db_session.delete(security)
+    await db_session.commit()
+    return

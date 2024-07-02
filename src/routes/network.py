@@ -99,3 +99,41 @@ async def get_network_configs(db_session: DBSessionDep):
     """Returns JSON containg current (reduced) configurations of all Networks"""
     networks = await NetworkService.get_networks(db_session)
     return networks
+
+
+# @router.delete("/limited/{id}", status_code=200)
+# async def delete_network_only(id, db_session: DBSessionDep):
+#     """Deletes Network profile with given database id."""
+#     try:
+#         id = int(id)
+#     except ValueError:
+#         raise HTTPException(status_code=400, detail="Invalid ID")
+#     if id < 0:
+#         raise HTTPException(status_code=400, detail="Invalid ID")
+#     network = await NetworkService.get_network(db_session, id)
+#     if network is None:
+#         raise HTTPException(status_code=400, detail="Invalid ID")
+#     await db_session.delete(network)
+#     await db_session.commit()
+#     return
+
+
+@router.delete("/{id}", status_code=200)
+async def delete_network_and_associated_items(id, db_session: DBSessionDep):
+    """Deletes Network profile with given database id, **as well as the associated Security and Wireless profiles**."""
+    try:
+        id = int(id)
+    except ValueError:
+        raise HTTPException(status_code=400, detail="Invalid ID")
+    if id < 0:
+        raise HTTPException(status_code=400, detail="Invalid ID")
+    network = await NetworkService.get_network(db_session, id)
+    if network is None:
+        raise HTTPException(status_code=400, detail="Invalid ID")
+    for wireless in network.wireless:
+        await db_session.delete(wireless)
+    for security in network.security:
+        await db_session.delete(security)
+    await db_session.delete(network)
+    await db_session.commit()
+    return

@@ -1,6 +1,6 @@
 from typing import List, Optional, Sequence
 
-from pydantic import ConfigDict
+from pydantic import ConfigDict, Field
 
 from schemas.joint import APIdSchema, GenericIdentSchema, GenericIdSchema
 
@@ -37,10 +37,6 @@ class NetworkSimpleSchema(BaseSchema):
             }
         },
     )
-
-
-class NetworkListSchema(BaseSchema):
-    networks: Sequence[NetworkSimpleSchema | None]
 
 
 class PutNetworkSchema(BaseSchema):

@@ -10,7 +10,7 @@ import services.wireless as WirelessService
 from config import DBSessionDep
 from schemas.network import (
     NetworkGigaSchema,
-    NetworkListSchema,
+    NetworkSimpleSchema,
     PutNetworkSchema,
 )
 from services.auth import AuthJWTTokenValidatorDep
@@ -94,9 +94,8 @@ async def get_network_config_by_id(id, db_session: DBSessionDep):
     return network
 
 
-# @router.get("/", status_code=200, response_model=NetworkListSchema)
-# async def get_network_configs(db_session: DBSessionDep):
-#    """Returns JSON containg current (reduced) configurations of all Networks"""
-#    networks = await NetworkService.get_networks(db_session)
-#    response = NetworkListSchema(networks=networks) # type:ignore
-#    return response
+@router.get("/", status_code=200, response_model=Sequence[NetworkSimpleSchema])
+async def get_network_configs(db_session: DBSessionDep):
+    """Returns JSON containg current (reduced) configurations of all Networks"""
+    networks = await NetworkService.get_networks(db_session)
+    return networks

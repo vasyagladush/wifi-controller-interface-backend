@@ -29,7 +29,7 @@ async def create_network(
         new_net.wireless.append(w)
     for s in security:
         new_net.security.append(s)
-    await db_session.add()
+    db_session.add(new_net)
     await db_session.commit()
 
 

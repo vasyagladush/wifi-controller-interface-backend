@@ -20,7 +20,7 @@ async def create_wireless(
         beacon_interval=beacon_interval,
         rts_cts_threshold=rts_cts_threshold,
     )
-    await db_session.add(new_wireless)
+    db_session.add(new_wireless)
     await db_session.commit()
     return new_wireless
 

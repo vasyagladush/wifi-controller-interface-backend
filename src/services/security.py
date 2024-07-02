@@ -25,7 +25,7 @@ async def create_security(
     for acl in mac_acls:
         new_security.mac_acls.append(acl)
     db_session.add(new_security)
-    db_session.commit()
+    await db_session.commit()
     return new_security
 
 

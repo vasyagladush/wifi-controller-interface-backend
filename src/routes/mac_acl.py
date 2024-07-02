@@ -19,6 +19,30 @@ async def mac_invalid(mac: str) -> bool:
     return not bool(mac_pattern.match(mac))
 
 
+@router.post("/", status_code=200)
+async def add_mac_acl(config: PutMacAclSchema, db_session: DBSessionDep):
+    """Endpoint for creating MAC ACLs. The request must be accompanied with a JSON (formatted like the result of the GET request to this endpoint). Parameter `security` is optional."""
+    update_data = dict(config)
+    for mac in update_data["macs"]:
+        if await mac_invalid(mac):
+            await db_session.rollback()
+            raise HTTPException(status_code=400, detail="Invalid MAC address")
+    try:
+        await MacAclService.create_mac_acl(
+            db_session,
+            update_data["name"],
+            update_data["macs"],
+            update_data["security"],
+        )
+    except ValueError:
+        print("A")
+        raise HTTPException(status_code=400, detail="Duplicate MAC ACL name")
+    except IndexError:
+        raise HTTPException(
+            status_code=400, detail="Invalid Security profile ID"
+        )
+
+
 @router.put("/{id}", status_code=200)
 async def change_mac_acl_config(
     id, config: PutMacAclSchema, db_session: DBSessionDep

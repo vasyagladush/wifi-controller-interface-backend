@@ -28,11 +28,14 @@ async def change_security_config(
     update_data = dict(config)
 
     if update_data["name"] is not None:
-        if (
+        security_with_same_name = (
             await SecurityService.get_security_by_exact_name(
                 db_session, update_data["name"]
             )
-            is not None
+        )
+        if (
+            security_with_same_name
+            and security_with_same_name.id != security.id
         ):
             await db_session.rollback()
             raise HTTPException(status_code=400, detail="Invalid name")

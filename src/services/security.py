@@ -35,9 +35,7 @@ async def get_security(db_session: AsyncSession, id: int) -> Security | None:
     ).first()
 
 
-async def get_security_by_exact_name(
-    db_session: AsyncSession, name: str
-) -> Sequence[Security] | None:
+async def get_security_by_exact_name(db_session: AsyncSession, name: str):
     return (
         await db_session.scalars(
             select(Security)

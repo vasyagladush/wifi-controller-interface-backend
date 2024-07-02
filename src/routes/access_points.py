@@ -36,12 +36,10 @@ async def change_ap_config(
                 raise HTTPException(status_code=400, detail="Invalid network")
             ap.networks.append(net_obj)
     if update_data["name"] is not None:
-        if (
-            await AccessPointService.get_AP_by_exact_name(
-                db_session, update_data["name"]
-            )
-            is not None
-        ):
+        ap_with_same_name = await AccessPointService.get_AP_by_exact_name(
+            db_session, update_data["name"]
+        )
+        if ap_with_same_name and ap_with_same_name.id != ap.id:
             await db_session.rollback()
             raise HTTPException(status_code=400, detail="Invalid name")
         ap.name = update_data["name"]

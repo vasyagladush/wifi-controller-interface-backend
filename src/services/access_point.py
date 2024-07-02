@@ -43,9 +43,7 @@ async def get_APs_by_name(
     ).all()
 
 
-async def get_AP_by_exact_name(
-    db_session: AsyncSession, name: str
-) -> Sequence[AccessPoint] | None:
+async def get_AP_by_exact_name(db_session: AsyncSession, name: str):
     return (
         await db_session.scalars(
             select(AccessPoint)

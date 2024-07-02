@@ -53,9 +53,7 @@ async def get_networks(db_session: AsyncSession) -> Sequence[Network] | None:
     ).all()
 
 
-async def get_network_by_exact_name(
-    db_session: AsyncSession, name: str
-) -> Sequence[Network] | None:
+async def get_network_by_exact_name(db_session: AsyncSession, name: str):
     return (
         await db_session.scalars(
             select(Network)

@@ -31,9 +31,7 @@ async def get_wireless(db_session: AsyncSession, id: int) -> Wireless | None:
     ).first()
 
 
-async def get_wireless_by_exact_name(
-    db_session: AsyncSession, name: str
-) -> Sequence[Wireless] | None:
+async def get_wireless_by_exact_name(db_session: AsyncSession, name: str):
     return (
         await db_session.scalars(
             select(Wireless)

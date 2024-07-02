@@ -73,12 +73,12 @@ async def change_network_config(
     update_data = dict(config)
 
     if update_data["name"] is not None:
-        if (
+        network_with_same_name = (
             await NetworkService.get_network_by_exact_name(
                 db_session, update_data["name"]
             )
-            is not None
-        ):
+        )
+        if network_with_same_name and network_with_same_name.id != network.id:
             await db_session.rollback()
             raise HTTPException(status_code=400, detail="Invalid name")
         network.name = update_data["name"]
@@ -95,27 +95,28 @@ async def change_network_config(
             raise HTTPException(status_code=400, detail="Invalid country code")
         network.country_code = update_data["country_code"]
 
-    await HandlerService.update_item_list(
-        network.access_point,
-        update_data["access_point"],
-        AccessPointService.get_AP,
-        "Invalid Access Point",
-        db_session,
-    )
-    await HandlerService.update_item_list(
-        network.wireless,
-        update_data["wireless"],
-        WirelessService.get_wireless,
-        "Invalid wireless profile",
-        db_session,
-    )
-    await HandlerService.update_item_list(
-        network.security,
-        update_data["security"],
-        SecurityService.get_security,
-        "Invalid security profile",
-        db_session,
-    )
+    # await HandlerService.update_item_list(
+    #     network.access_point,
+    #     update_data["access_point"],
+    #     AccessPointService.get_AP,
+    #     "Invalid Access Point",
+    #     db_session,
+    # )
+    # await HandlerService.update_item_list(
+    #     network.wireless,
+    #     update_data["wireless"],
+    #     WirelessService.get_wireless,
+    #     "Invalid wireless profile",
+    #     db_session,
+    # )
+    # await HandlerService.update_item_list(
+    #     network.security,
+    #     update_data["security"],
+    #     SecurityService.get_security,
+    #     "Invalid security profile",
+    #     db_session,
+    # )
+    await db_session.commit()
 
 
 @router.get("/{id}", status_code=200, response_model=NetworkGigaSchema)

@@ -57,12 +57,10 @@ async def change_mac_acl_config(
     update_data = dict(config)
 
     if update_data["name"] is not None:
-        if (
-            await MacAclService.get_mac_acl_by_exact_name(
-                db_session, update_data["name"]
-            )
-            is not None
-        ):
+        mac_acl_with_same_name = await MacAclService.get_mac_acl_by_exact_name(
+            db_session, update_data["name"]
+        )
+        if mac_acl_with_same_name and mac_acl_with_same_name.id != mac_acl.id:
             await db_session.rollback()
             raise HTTPException(status_code=400, detail="Invalid name")
         mac_acl.name = update_data["name"]

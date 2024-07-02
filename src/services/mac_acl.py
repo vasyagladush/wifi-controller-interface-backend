@@ -14,9 +14,7 @@ async def get_mac_acl(db_session: AsyncSession, id: int) -> MACACL | None:
     ).first()
 
 
-async def get_mac_acl_by_exact_name(
-    db_session: AsyncSession, name: str
-) -> Sequence[MACACL] | None:
+async def get_mac_acl_by_exact_name(db_session: AsyncSession, name: str):
     return (
         await db_session.scalars(
             select(MACACL)

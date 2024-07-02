@@ -26,41 +26,44 @@ async def change_wireless_config(
     update_data = dict(config)
 
     if update_data["name"] is not None:
-        if (
+        wireless_with_same_name = (
             await WirelessService.get_wireless_by_exact_name(
                 db_session, update_data["name"]
             )
-            is not None
+        )
+        if (
+            wireless_with_same_name
+            and wireless_with_same_name.id != wireless.id
         ):
             await db_session.rollback()
             raise HTTPException(status_code=400, detail="Invalid name")
         wireless.name = update_data["name"]
 
-        if update_data["vht"] is not None:
-            wireless.vht = update_data["vht"]
+    if update_data["vht"] is not None:
+        wireless.vht = update_data["vht"]
 
-        if update_data["acs"] is not None:
-            wireless.acs = update_data["acs"]
+    if update_data["acs"] is not None:
+        wireless.acs = update_data["acs"]
 
-        if update_data["beacon_interval"] is not None:
-            if update_data["beacon_interval"] < 0:
-                await db_session.rollback()
-                raise HTTPException(
-                    status_code=400, detail="Invalid beacon interval"
-                )
-            wireless.beacon_interval = update_data["beacon_interval"]
+    if update_data["beacon_interval"] is not None:
+        if update_data["beacon_interval"] < 0:
+            await db_session.rollback()
+            raise HTTPException(
+                status_code=400, detail="Invalid beacon interval"
+            )
+        wireless.beacon_interval = update_data["beacon_interval"]
 
-        if update_data["rts_cts_threshold"] is not None:
-            if (
-                type(update_data["rts_cts_threshold"]) is not int
-                or update_data["rts_cts_threshold"] > 65535
-                or update_data["rts_cts_threshold"] < 1
-            ):
-                await db_session.rollback()
-                raise HTTPException(
-                    status_code=400, detail="Invalid RTS/CTS Threshold"
-                )
-            wireless.rts_cts_threshold = update_data["rts_cts_threshold"]
+    if update_data["rts_cts_threshold"] is not None:
+        if (
+            type(update_data["rts_cts_threshold"]) is not int
+            or update_data["rts_cts_threshold"] > 65535
+            or update_data["rts_cts_threshold"] < 1
+        ):
+            await db_session.rollback()
+            raise HTTPException(
+                status_code=400, detail="Invalid RTS/CTS Threshold"
+            )
+        wireless.rts_cts_threshold = update_data["rts_cts_threshold"]
 
     await HandlerService.update_item_list(
         wireless.networks,

@@ -1,6 +1,6 @@
 from typing import Sequence
 
-from fastapi import APIRouter, Depends, HTTPException, Query
+from fastapi import APIRouter, Body, Depends, HTTPException, Query
 
 import services.access_point as AccessPointService
 import services.network as NetworkService
@@ -18,6 +18,45 @@ from services.auth import AuthJWTTokenValidatorDep
 router = APIRouter(
     dependencies=[AuthJWTTokenValidatorDep], responses={401: {}}
 )
+
+
+@router.post("/", status_code=204)
+async def create_network_config(
+    db_session: DBSessionDep, config: NetworkGigaSchema = Body(...)
+):
+    wireless = await [
+        WirelessService.create_wireless(
+            db_session,
+            w.name,
+            w.vht,
+            w.acs,
+            w.beacon_interval,
+            w.rts_cts_threshold,
+        )
+        for w in config.wireless
+    ]
+    security = await [
+        SecurityService.create_security(
+            db_session,
+            s.name,
+            s.wireless_security_type,
+            s.radius,
+            s.eap,
+            s.mac_acl_type,
+            s.mac_acls,
+        )
+        for s in config.security
+    ]
+    network = await NetworkService.create_network(
+        config.access_points,
+        db_session,
+        config.name,
+        config.ssid,
+        config.country_code,
+        wireless=wireless,
+        security=security,
+    )
+    return
 
 
 @router.put("/{id}", status_code=200)

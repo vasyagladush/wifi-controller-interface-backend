@@ -14,4 +14,5 @@ class User(Base):
     first_name: Mapped[str]
     last_name: Mapped[str]
     password_hash: Mapped[str]
+    is_admin: Mapped[bool] = mapped_column(default=False)
     # TODO: roles: admin, user, etc.

@@ -7,11 +7,9 @@ import services.security as SecurityService
 import services.update_object as HandlerService
 from config import DBSessionDep
 from schemas.mac_acl import MacAclSchema, PutMacAclSchema
-from services.auth import AuthJWTTokenValidatorDep
+from services.auth import AdminAccessCheckDep
 
-router = APIRouter(
-    dependencies=[AuthJWTTokenValidatorDep], responses={401: {}}
-)
+router = APIRouter(dependencies=[AdminAccessCheckDep], responses={401: {}})
 
 
 async def mac_invalid(mac: str) -> bool:

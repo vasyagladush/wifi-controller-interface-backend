@@ -12,6 +12,7 @@ from models.user import User
 class AuthJWTTokenPayload(TypedDict):
     user_id: int
     expires_at: float
+    is_admin: bool
 
 
 def construct_token_json_response(token: str):
@@ -26,6 +27,7 @@ def construct_auth_jwt(user: User) -> Dict[str, str]:
     payload: AuthJWTTokenPayload = {
         "user_id": user.id,
         "expires_at": time.time() + 2400,
+        "is_admin": user.is_admin,
     }
     return construct_token_json_response(
         jwt.encode(payload, secret_key, algorithm="HS256")  # type: ignore
@@ -70,3 +72,14 @@ class JWTBearer(HTTPBearer):
 
 
 AuthJWTTokenValidatorDep = Depends(JWTBearer())
+
+
+def check_admin_access(
+    token_data: Annotated[AuthJWTTokenPayload, AuthJWTTokenValidatorDep],
+) -> AuthJWTTokenPayload:
+    if token_data["is_admin"]:
+        return token_data
+    raise HTTPException(403, "No admin access")
+
+
+AdminAccessCheckDep = Depends(check_admin_access)

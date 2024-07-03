@@ -21,6 +21,7 @@ class UserLoginResponseSchema(BaseSchema):
 class UserSignUpSchema(BaseSchema, HTTPBasicCredentials):
     first_name: str
     last_name: str
+    is_admin: bool
 
     model_config = ConfigDict(
         json_schema_extra={
@@ -38,6 +39,7 @@ class UserSchema(BaseSchema):
     first_name: str
     last_name: str
     username: str
+    is_admin: bool
 
     model_config = ConfigDict(
         from_attributes=True,
@@ -56,6 +58,7 @@ class UserModSchema(BaseSchema):
     last_name: Optional[str] = None
     username: Optional[str] = None
     password: Optional[str] = None
+    is_admin: Optional[bool] = None
 
 
 class UserPlusSchema(BaseSchema):
@@ -63,3 +66,4 @@ class UserPlusSchema(BaseSchema):
     first_name: str
     last_name: str
     username: str
+    is_admin: bool

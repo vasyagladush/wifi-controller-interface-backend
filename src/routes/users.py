@@ -14,6 +14,7 @@ from schemas.user import (
     UserSignUpSchema,
 )
 from services.auth import (
+    AdminAccessCheckDep,
     AuthJWTTokenPayload,
     AuthJWTTokenValidatorDep,
     construct_auth_jwt,
@@ -48,10 +49,14 @@ async def login(
     )
 
 
-@router.post("/", status_code=201, response_model=UserSchema)
+@router.post(
+    "/",
+    status_code=201,
+    response_model=UserSchema,
+    dependencies=[AdminAccessCheckDep],
+)
 async def create_user(
     db_session: DBSessionDep,
-    auth_token_body: Annotated[AuthJWTTokenPayload, AuthJWTTokenValidatorDep],
     body: UserSignUpSchema = Body(...),
 ):
     """Creates User with specified details"""
@@ -92,20 +97,19 @@ async def get_current_user(
     status_code=200,
     response_model=Sequence[UserPlusSchema],
     responses={401: {}},
+    dependencies=[AdminAccessCheckDep],
 )
 async def get_all_users(
-    auth_token_body: Annotated[AuthJWTTokenPayload, AuthJWTTokenValidatorDep],
     db_session: DBSessionDep,
 ):
     users = await UserService.get_users(db_session)
     return users
 
 
-@router.delete("/{id}", status_code=204)
+@router.delete("/{id}", status_code=204, dependencies=[AdminAccessCheckDep])
 async def delete_user(
     id,
     db_session: DBSessionDep,
-    auth_token_body: Annotated[AuthJWTTokenPayload, AuthJWTTokenValidatorDep],
 ):
     """Deletes User with database id"""
     user_to_delete: User | None = await UserService.get_user(db_session, id)
@@ -125,7 +129,7 @@ async def delete_user(
 async def modify_user(
     id,
     db_session: DBSessionDep,
-    auth_token_body: Annotated[AuthJWTTokenPayload, AuthJWTTokenValidatorDep],
+    auth_token_body: Annotated[AuthJWTTokenPayload, AdminAccessCheckDep],
     config: UserModSchema,
 ):
     """Allows modification of user. Password can be changed only by the user."""
@@ -167,6 +171,9 @@ async def modify_user(
 
     if update_data["last_name"] is not None:
         user.last_name = update_data["last_name"]
+
+    if update_data["is_admin"] is not None:
+        user.is_admin = update_data["is_admin"]
 
     await db_session.commit()
     return

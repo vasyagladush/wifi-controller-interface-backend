@@ -2,12 +2,10 @@ from fastapi import APIRouter, Body, HTTPException
 
 from config import app_config
 from schemas.cmd import CmdSchema
-from services.auth import AuthJWTTokenValidatorDep
+from services.auth import AdminAccessCheckDep, AuthJWTTokenValidatorDep
 from services.console import send_command
 
-router = APIRouter(
-    dependencies=[AuthJWTTokenValidatorDep], responses={401: {}}
-)
+router = APIRouter(dependencies=[AdminAccessCheckDep], responses={401: {}})
 
 
 @router.post("/", status_code=200)

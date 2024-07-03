@@ -5,11 +5,9 @@ import services.update_object as HandlerService
 import services.wireless as WirelessService
 from config import DBSessionDep
 from schemas.wireless import PutWirelessSchema, WirelessSchema
-from services.auth import AuthJWTTokenValidatorDep
+from services.auth import AdminAccessCheckDep
 
-router = APIRouter(
-    dependencies=[AuthJWTTokenValidatorDep], responses={401: {}}
-)
+router = APIRouter(dependencies=[AdminAccessCheckDep], responses={401: {}})
 
 
 @router.put("/{id}", status_code=200)

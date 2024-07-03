@@ -9,11 +9,9 @@ from config import DBSessionDep
 from routes import PaginationParamsDep
 from schemas.access_point import APSchema, GetAPsSchema, PutAPSchema
 from schemas.pagination import PaginationParamsSchema
-from services.auth import AuthJWTTokenValidatorDep
+from services.auth import AdminAccessCheckDep
 
-router = APIRouter(
-    dependencies=[AuthJWTTokenValidatorDep], responses={401: {}}
-)
+router = APIRouter(dependencies=[AdminAccessCheckDep], responses={401: {}})
 
 
 @router.put("/{id}", status_code=204)

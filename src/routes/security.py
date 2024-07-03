@@ -7,11 +7,9 @@ import services.security as SecurityService
 import services.update_object as HandlerService
 from config import DBSessionDep
 from schemas.security import PutSecuritySchema, SecuritySchema
-from services.auth import AuthJWTTokenValidatorDep
+from services.auth import AdminAccessCheckDep
 
-router = APIRouter(
-    dependencies=[AuthJWTTokenValidatorDep], responses={401: {}}
-)
+router = APIRouter(dependencies=[AdminAccessCheckDep], responses={401: {}})
 
 
 @router.put("/{id}", status_code=200)

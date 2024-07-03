@@ -14,11 +14,9 @@ from schemas.network import (
     NetworkSimpleSchema,
     PutNetworkSchema,
 )
-from services.auth import AuthJWTTokenValidatorDep
+from services.auth import AdminAccessCheckDep
 
-router = APIRouter(
-    dependencies=[AuthJWTTokenValidatorDep], responses={401: {}}
-)
+router = APIRouter(dependencies=[AdminAccessCheckDep], responses={401: {}})
 
 
 @router.post("/", status_code=204)

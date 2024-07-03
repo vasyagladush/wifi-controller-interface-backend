@@ -2,17 +2,9 @@ from typing import Optional
 
 from pydantic import ConfigDict
 
+from schemas.joint import GenericIdentSchema
+
 from . import BaseSchema, PaginatedSchema
-
-
-class NetworkNameSchema(BaseSchema):
-    id: int
-    name: str
-
-    model_config = ConfigDict(
-        from_attributes=True,
-        json_schema_extra={"example": {"id": 1, "name": "Guests"}},
-    )
 
 
 class APSchema(BaseSchema):
@@ -20,9 +12,7 @@ class APSchema(BaseSchema):
     device_id: int
     name: str
     ip: str
-    networks: list[
-        NetworkNameSchema
-    ]  # TODO: Verify that this how this should be done
+    networks: list[GenericIdentSchema]
 
     model_config = ConfigDict(
         from_attributes=True,

@@ -9,7 +9,13 @@ from fastapi_responses import custom_openapi
 from config import app_config, session_manager
 from routes.access_points import router as AccessPointsRouter
 from routes.console import router as ConsoleRouter
+from routes.mac_acl import router as MacACLRouter
+from routes.network import router as NetworksRouter
+from routes.security import router as SecurityRouter
 from routes.users import router as UsersRouter
+from routes.wireless import router as WirelessRouter
+
+# from routes.debug import router as DebugRouter
 
 logging.basicConfig(
     stream=sys.stdout,
@@ -56,3 +62,8 @@ app.include_router(
     AccessPointsRouter, tags=["Access points"], prefix="/access-points"
 )
 app.include_router(ConsoleRouter, tags=["Console"], prefix="/console")
+app.include_router(NetworksRouter, tags=["Networks"], prefix="/networks")
+app.include_router(WirelessRouter, tags=["Wireless"], prefix="/wireless")
+app.include_router(SecurityRouter, tags=["Security"], prefix="/security")
+app.include_router(MacACLRouter, tags=["MAC ACL"], prefix="/mac-acls")
+# app.include_router(DebugRouter, tags=["Debug"], prefix="/debug")

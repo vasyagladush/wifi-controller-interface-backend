@@ -9,7 +9,7 @@ async def send_command(
     async with aiofiles.open(cmd_pipe, "w") as pipe_in:
         await pipe_in.write(cmd)
     async with aiofiles.open(output_pipe, "r") as pipe_out:
-        output: str = await pipe_out.readline()
+        output: str = await pipe_out.read()
     return output
 
 

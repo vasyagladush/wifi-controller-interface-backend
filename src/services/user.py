@@ -1,3 +1,4 @@
+from typing import Sequence
 from uuid import UUID
 
 from sqlalchemy import select
@@ -12,6 +13,10 @@ async def get_user(db_session: AsyncSession, id: int) -> User | None:
     return (
         await db_session.scalars(select(User).where(User.id == id))
     ).first()
+
+
+async def get_users(db_session: AsyncSession) -> Sequence[User] | None:
+    return (await db_session.scalars(select(User))).all()
 
 
 async def get_user_by_username(

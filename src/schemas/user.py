@@ -1,3 +1,5 @@
+from typing import Optional
+
 from fastapi.security import HTTPBasicCredentials
 from pydantic import BaseModel, ConfigDict
 
@@ -47,3 +49,17 @@ class UserSchema(BaseSchema):
             }
         },
     )
+
+
+class UserModSchema(BaseSchema):
+    first_name: Optional[str] = None
+    last_name: Optional[str] = None
+    username: Optional[str] = None
+    password: Optional[str] = None
+
+
+class UserPlusSchema(BaseSchema):
+    id: int
+    first_name: str
+    last_name: str
+    username: str

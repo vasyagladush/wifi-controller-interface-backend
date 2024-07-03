@@ -22,6 +22,8 @@ async def create_security(
         eap=eap,
         mac_acl_type=mac_acl_type,
     )
+
+    mac_acls = [MACACL(name=acl.name, macs=acl.macs) for acl in mac_acls]
     for acl in mac_acls:
         new_security.mac_acls.append(acl)
     db_session.add(new_security)

@@ -3,11 +3,12 @@ from typing import Sequence
 from fastapi import APIRouter, Body, Depends, HTTPException, Query
 
 import services.access_point as AccessPointService
+import services.mac_acl as MACACLService
 import services.network as NetworkService
 import services.security as SecurityService
 import services.update_object as HandlerService
 import services.wireless as WirelessService
-from config import DBSessionDep
+from config import DBSessionDep, app_config
 from schemas.network import (
     NetworkGigaSchema,
     NetworkSimpleSchema,
@@ -24,6 +25,14 @@ router = APIRouter(
 async def create_network_config(
     db_session: DBSessionDep, config: NetworkGigaSchema = Body(...)
 ):
+    for w in config.wireless:
+        if (
+            await WirelessService.get_wireless_by_exact_name(
+                db_session, w.name
+            )
+            is not None
+        ):
+            raise HTTPException(400, "Wireless with that name already exists!")
     wireless = [
         await WirelessService.create_wireless(
             db_session,
@@ -35,6 +44,24 @@ async def create_network_config(
         )
         for w in config.wireless
     ]
+    for s in config.security:
+        if (
+            await SecurityService.get_security_by_exact_name(
+                db_session, s.name
+            )
+            is not None
+        ):
+            raise HTTPException(400, "Security with that name already exists!")
+        for acl in s.mac_acls:
+            if (
+                await MACACLService.get_mac_acl_by_exact_name(
+                    db_session, acl.name
+                )
+                is not None
+            ):
+                raise HTTPException(
+                    400, "MAC ACL with that name already exists!"
+                )
     security = [
         await SecurityService.create_security(
             db_session,
@@ -47,12 +74,14 @@ async def create_network_config(
         )
         for s in config.security
     ]
+    aps = [await AccessPointService.get_AP_by_exact_name(db_session, ap.name) for ap in config.access_points]  # type: ignore
     network = await NetworkService.create_network(
-        config.access_points,
+        aps,
         db_session,
         config.name,
         config.ssid,
         config.country_code,
+        password=app_config.CRYPTOGRAPHY.encrypt(config.password.encode()),
         wireless=wireless,
         security=security,
     )

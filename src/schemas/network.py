@@ -85,6 +85,7 @@ class NetworkGigaSchema(BaseSchema):
     name: str
     ssid: str
     country_code: str
+    password: str
     access_points: list[NG_AP_Schema]
     wireless: list[NG_Wireless_Schema]
     security: list[NG_Security_Schema]

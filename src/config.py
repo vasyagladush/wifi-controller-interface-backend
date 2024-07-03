@@ -1,6 +1,7 @@
 from contextlib import asynccontextmanager
 from typing import Annotated, Any, AsyncIterator, Optional
 
+from cryptography.fernet import Fernet
 from fastapi import Depends
 from passlib.context import CryptContext
 from pydantic_settings import BaseSettings
@@ -21,6 +22,7 @@ class AppConfig(BaseSettings):
     ECHO_SQL: bool = False
     CMD_PIPE_PATH: str = ""
     OUTPUT_PIPE_PATH: str = ""
+    CRYPTOGRAPHY: Fernet = Fernet(Fernet.generate_key())
 
     class Config:
         env_file = ".env"

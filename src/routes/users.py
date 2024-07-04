@@ -174,7 +174,7 @@ async def modify_user(
         check = await UserService.get_user_by_username(
             db_session, update_data["username"]
         )
-        if check is not None and check.id != id:
+        if check is not None and str(check.id) != id:
             await db_session.rollback()
             raise HTTPException(
                 status_code=400,

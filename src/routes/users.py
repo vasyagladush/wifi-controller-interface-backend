@@ -106,6 +106,22 @@ async def get_all_users(
     return users
 
 
+@router.get(
+    "/{id}",
+    status_code=200,
+    response_model=UserPlusSchema,
+    responses={401: {}},
+)
+async def get_user(
+    id,
+    db_session: DBSessionDep,
+):
+    user: User | None = await UserService.get_user(db_session, id)
+    if not user:
+        raise HTTPException(status_code=404, detail="No user found")
+    return user
+
+
 @router.delete("/{id}", status_code=204, dependencies=[AdminAccessCheckDep])
 async def delete_user(
     id,
